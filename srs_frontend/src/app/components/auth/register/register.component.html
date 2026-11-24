@@ -1,0 +1,96 @@
+<div class="auth-wrapper">
+  <section class="auth-shell">
+    <div class="auth-hero register-hero">
+      <div class="hero-copy">
+        <div class="hero-mark">
+          <div class="mark-badge">REMS</div>
+          <div class="mark-line"></div>
+        </div>
+        <h1>Set Up Your<br />Workspace</h1>
+        <p>Create a user account to start managing properties, locations, and records with a cleaner workflow.</p>
+      </div>
+
+      <div class="hero-scene" aria-hidden="true">
+        <div class="scene-tower tower-one"></div>
+        <div class="scene-tower tower-two"></div>
+        <div class="scene-tower tower-three"></div>
+        <div class="scene-tower tower-four"></div>
+        <div class="scene-water"></div>
+        <div class="scene-house">
+          <div class="house-roof"></div>
+          <div class="house-body">
+            <span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-panel">
+        <article>
+          <i>01</i>
+          <strong>Fast Onboarding</strong>
+          <span>Create access in a minute and move straight into the property workflow.</span>
+        </article>
+        <article>
+          <i>02</i>
+          <strong>Structured Data</strong>
+          <span>Keep users, cities, districts, and listings aligned from the start.</span>
+        </article>
+        <article>
+          <i>03</i>
+          <strong>Secure Access</strong>
+          <span>Password rules are enforced during registration to keep the system safer.</span>
+        </article>
+      </div>
+    </div>
+
+    <form class="auth-form" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      <div class="auth-form-inner">
+        <div class="auth-icon" aria-hidden="true">✦</div>
+        <h2>Create Account</h2>
+        <p class="auth-subtitle">Start with your user profile</p>
+
+        <ng-container *ngIf="error"> <div class="alert alert-danger">{{ error }}</div> </ng-container>
+        <ng-container *ngIf="success"> <div class="alert alert-success">{{ success }}</div> </ng-container>
+
+        <div class="auth-grid">
+          <label>First Name
+            <div class="field-shell">
+              <span class="field-icon" aria-hidden="true">◌</span>
+              <input type="text" formControlName="firstName" placeholder="Enter your first name" />
+            </div>
+          </label>
+          <label>Last Name
+            <div class="field-shell">
+              <span class="field-icon" aria-hidden="true">◌</span>
+              <input type="text" formControlName="lastName" placeholder="Enter your last name" />
+            </div>
+          </label>
+        </div>
+
+        <label>Email Address
+          <div class="field-shell">
+            <span class="field-icon" aria-hidden="true">✉</span>
+            <input type="email" formControlName="email" autocomplete="email" placeholder="Enter your email address" />
+          </div>
+        </label>
+
+        <label>Password
+          <div class="field-shell">
+            <span class="field-icon" aria-hidden="true">⟡</span>
+            <input type="password" formControlName="password" autocomplete="new-password" placeholder="Create your password" />
+          </div>
+        </label>
+
+        <div class="auth-actions">
+          <button type="submit" [disabled]="loading || registerForm.invalid">
+            {{ loading ? 'Registering...' : 'Register' }}
+          </button>
+        </div>
+
+        <div class="auth-divider"><span>or</span></div>
+        <p class="link">Already have an account? <a routerLink="/login">Sign In</a></p>
+      </div>
+    </form>
+  </section>
+</div>

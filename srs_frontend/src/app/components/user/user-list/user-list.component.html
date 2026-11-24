@@ -1,0 +1,71 @@
+<div class="page">
+  <div class="page-header">
+    <h1>User Management</h1>
+    <a class="btn-primary" routerLink="/users/new">+ Add User</a>
+  </div>
+
+  <ng-container *ngIf="error"> <div class="alert alert-danger">{{ error }}</div> </ng-container>
+  <ng-container *ngIf="success"> <div class="alert alert-success">{{ success }}</div> </ng-container>
+  <ng-container *ngIf="loading"> <div class="loading">Loading...</div> </ng-container>
+
+  <ng-container *ngIf="!loading">
+    <div class="table-tools">
+      <span>{{ users.length }} users</span>
+      <label>Rows
+        <select [formControl]="pageSizeControl" (change)="onPageSizeChange()">
+          <option [value]="5">5</option>
+          <option [value]="10">10</option>
+          <option [value]="20">20</option>
+        </select>
+      </label>
+    </div>
+
+    <table class="data-table">
+      <caption class="visually-hidden">Users list with names, emails, roles, and available actions.</caption>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Email</th>
+          <th>Role</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let u of pagedUsers">
+            <td>{{ u.id }}</td>
+            <td>{{ u.firstName }}</td>
+            <td>{{ u.lastName }}</td>
+            <td>{{ u.email }}</td>
+            <td>
+              <span class="badge"
+                [class]="'badge ' + getRoleBadge(u.userRole)">
+                {{ getRoleName(u.userRole) }}
+              </span>
+            </td>
+            <td>
+              <a class="btn-secondary btn-sm" [routerLink]="['/users', u.id, 'edit']">Edit</a>
+              <button class="btn-danger btn-sm" (click)="deleteUser(u.id, u.firstName + ' ' + u.lastName)">Delete</button>
+            </td>
+        </tr>
+        <tr *ngIf="pagedUsers.length === 0"><td colspan="6" class="empty">No users found.</td></tr>
+      </tbody>
+    </table>
+
+    <nav class="pagination" aria-label="User list pagination">
+      <span>Page {{ currentPage }} of {{ totalPages }}</span>
+      <button type="button" class="btn-secondary btn-sm" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">Previous</button>
+      <ng-container *ngFor="let page of pageNumbers">
+        <button
+          type="button"
+          class="btn-secondary btn-sm page-button"
+          [class.active]="page === currentPage"
+          (click)="goToPage(page)">
+          {{ page }}
+        </button>
+      </ng-container>
+      <button type="button" class="btn-secondary btn-sm" [disabled]="currentPage === totalPages" (click)="goToPage(currentPage + 1)">Next</button>
+    </nav>
+  </ng-container>
+</div>

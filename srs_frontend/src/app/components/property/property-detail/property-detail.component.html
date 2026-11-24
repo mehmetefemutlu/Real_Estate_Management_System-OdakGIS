@@ -1,0 +1,83 @@
+<div class="page">
+  <ng-container *ngIf="loading"> <div class="loading">Loading...</div> </ng-container>
+  <ng-container *ngIf="error"> <div class="alert alert-danger">{{ error }}</div> </ng-container>
+
+  <ng-container *ngIf="property">
+    <div class="page-header">
+      <h1>{{ property.title }}</h1>
+      <div style="display:flex; gap:0.5rem;">
+        <ng-container *ngIf="canEdit">
+          <a class="btn-secondary" [routerLink]="['/properties', property.propertyID, 'edit']">Edit</a>
+          <button class="btn-danger" (click)="delete()">Delete</button>
+        </ng-container>
+        <a class="btn-secondary" routerLink="/properties">Back</a>
+      </div>
+    </div>
+
+    <div class="detail-grid">
+      <div class="detail-card">
+        <h3>General</h3>
+        <dl>
+          <dt>Type</dt><dd><span class="badge badge-blue">{{ getTypeName(property.propertyType) }}</span></dd>
+          <dt>Price</dt><dd>{{ property.price | number:'1.0-0' }} ₺</dd>
+          <dt>Area</dt><dd>{{ property.area }} m²</dd>
+          <dt>Bedrooms</dt><dd>{{ property.bedrooms }}</dd>
+          <dt>Bathrooms</dt><dd>{{ property.bathrooms }}</dd>
+          <dt>Parking Spaces</dt><dd>{{ property.parkingSpaces }}</dd>
+          <dt>Read Only</dt><dd>{{ property.isReadOnly ? 'Yes' : 'No' }}</dd>
+        </dl>
+      </div>
+
+      <div class="detail-card">
+        <h3>Location</h3>
+        <dl>
+          <dt>Address</dt><dd>{{ property.address }}</dd>
+          <dt>Neighbourhood</dt><dd>{{ property.neighbourhoodName }}</dd>
+          <dt>District</dt><dd>{{ property.districtName }}</dd>
+          <dt>City</dt><dd>{{ property.cityName }}</dd>
+          <dt>Coordinates</dt><dd>{{ property.coordinates || '—' }}</dd>
+          <dt>Parcel No</dt><dd>{{ property.parcelNumber || '—' }}</dd>
+          <dt>Lot No</dt><dd>{{ property.lotNumber || '—' }}</dd>
+        </dl>
+      </div>
+
+      <div class="detail-card map-card">
+        <h3>Map</h3>
+        <app-property-map
+          [coordinates]="property.coordinates"
+          [cityName]="property.cityName"
+          [districtName]="property.districtName"
+          [neighbourhoodName]="property.neighbourhoodName">
+        </app-property-map>
+      </div>
+
+      <ng-container *ngIf="propertyImageUrl">
+        <div class="detail-card image-card">
+          <h3>Photo</h3>
+          <img [src]="propertyImageUrl" [alt]="property.title" />
+        </div>
+      </ng-container>
+
+      <div class="detail-card">
+        <h3>Owner</h3>
+        <dl>
+          <dt>Name</dt><dd>{{ property.ownerName }}</dd>
+          <dt>Email</dt><dd>{{ property.ownerEmail }}</dd>
+        </dl>
+      </div>
+
+      <div class="detail-card">
+        <h3>Description</h3>
+        <p>{{ property.description || 'No description provided.' }}</p>
+      </div>
+
+      <div class="detail-card">
+        <h3>Dates</h3>
+        <dl>
+          <dt>Created</dt><dd>{{ property.createdAt | date:'medium' }}</dd>
+          <dt>Updated</dt><dd>{{ property.updatedAt | date:'medium' }}</dd>
+        </dl>
+      </div>
+    </div>
+  </ng-container>
+</div>

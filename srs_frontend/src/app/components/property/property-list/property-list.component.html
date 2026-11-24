@@ -1,0 +1,170 @@
+<div class="page">
+  <div class="page-header">
+    <h1>{{ isAdmin ? 'All Properties' : 'My Properties' }}</h1>
+    <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+      <button class="btn-secondary" (click)="toggleSearch()">
+        {{ showSearch ? 'Hide Filter' : 'Search / Filter' }}
+      </button>
+      <button class="btn-secondary" (click)="exportCsv()">Export Excel</button>
+      <button class="btn-secondary" (click)="exportPdf()">Export PDF</button>
+      <ng-container *ngIf="!isAdmin">
+        <input
+          id="excel-import-input"
+          class="visually-hidden"
+          type="file"
+          accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+          aria-label="Import properties from Excel"
+          (change)="importExcel($event)" />
+        <label class="btn-secondary" [class.disabled]="importing" for="excel-import-input">
+          {{ importing ? 'Importing...' : 'Import Excel' }}
+        </label>
+        <button class="btn-danger" (click)="deleteSelectedProperties()" [disabled]="selectedPropertyIds.size === 0">Delete Selected</button>
+        <a class="btn-primary" routerLink="/properties/new">+ Add Property</a>
+      </ng-container>
+    </div>
+  </div>
+
+  <ng-container *ngIf="showSearch">
+    <div class="form-card" [formGroup]="searchForm" style="max-width:100%; display:grid; grid-template-columns: repeat(auto-fill,minmax(200px,1fr)); gap:0.75rem;">
+      <label>Min Price
+        <input type="number" formControlName="minPrice" placeholder="Min price" />
+      </label>
+      <label>Max Price
+        <input type="number" formControlName="maxPrice" placeholder="Max price" />
+      </label>
+      <label>Min Bedrooms
+        <input type="number" formControlName="minBedrooms" placeholder="Min bedrooms" />
+      </label>
+      <label>Min Area (m²)
+        <input type="number" formControlName="minArea" placeholder="Min area" />
+      </label>
+      <label>City
+        <select formControlName="cityId">
+          <option [ngValue]="undefined">All Cities</option>
+          <ng-container *ngFor="let c of cities">
+            <option [ngValue]="c.id">{{ c.cityName }}</option>
+          </ng-container>
+        </select>
+      </label>
+      <label>Property Type
+        <select formControlName="propertyType">
+          <option [ngValue]="undefined">All Types</option>
+          <option [ngValue]="0">Apartment</option>
+          <option [ngValue]="1">House</option>
+          <option [ngValue]="2">Condo</option>
+          <option [ngValue]="3">Townhouse</option>
+          <option [ngValue]="4">Land</option>
+        </select>
+      </label>
+      <label>Parcel Number
+        <input type="text" formControlName="parcelNumber" placeholder="Parcel number" />
+      </label>
+      <label>Lot Number
+        <input type="text" formControlName="lotNumber" placeholder="Lot number" />
+      </label>
+      <ng-container *ngIf="isAdmin">
+        <label>Filter by Owner
+          <select formControlName="ownerId">
+            <option [ngValue]="undefined">All Owners</option>
+            <ng-container *ngFor="let u of users">
+              <option [ngValue]="u.id">{{ u.firstName }} {{ u.lastName }}</option>
+            </ng-container>
+          </select>
+        </label>
+      </ng-container>
+      <label>Page Size
+        <select [formControl]="pageSizeControl" (change)="changePageSize()">
+          <ng-container *ngFor="let size of pageSizeOptions">
+            <option [value]="size">{{ size }}</option>
+          </ng-container>
+        </select>
+      </label>
+      <div class="form-actions" style="align-self:flex-end;">
+        <button class="btn-primary" (click)="runSearch()">Search</button>
+        <button class="btn-secondary" (click)="resetSearch()">Reset</button>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="success"> <div class="alert alert-success">{{ success }}</div> </ng-container>
+  <ng-container *ngIf="error"> <div class="alert alert-danger">{{ error }}</div> </ng-container>
+  <ng-container *ngIf="loading"> <div class="loading">Loading...</div> </ng-container>
+
+  <ng-container *ngIf="!loading">
+    <section class="property-map-section">
+      <app-property-overview-map [properties]="pagedProperties"></app-property-overview-map>
+    </section>
+
+    <div class="table-wrap">
+      <table class="data-table" #propertyTable>
+        <caption class="visually-hidden">Properties list with selection, property details, locations, and available actions.</caption>
+        <thead>
+          <tr>
+            <th class="selection-cell" [class.hidden]="isAdmin">
+              <label class="selection-toggle">
+                <input
+                  type="checkbox"
+                  [checked]="allPagedSelected"
+                  (change)="updateAllSelections($event)" />
+                <span class="visually-hidden">Select all properties</span>
+              </label>
+            </th>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Type</th>
+            <th>Price</th>
+            <th>Area</th>
+            <th>City</th>
+            <th>District</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let p of pagedProperties">
+              <td class="selection-cell" [class.hidden]="isAdmin">
+                <label class="selection-toggle">
+                  <input
+                    type="checkbox"
+                    [checked]="isSelected(p.propertyID)"
+                    (change)="updateSelection(p.propertyID, $event)" />
+                  <span class="visually-hidden">Select property {{ p.title }}</span>
+                </label>
+              </td>
+              <td>{{ p.propertyID }}</td>
+              <td>{{ p.title }}</td>
+              <td><span class="badge badge-blue">{{ getTypeName(p.propertyType) }}</span></td>
+              <td>{{ p.price | number:'1.0-0' }} ₺</td>
+              <td>{{ p.area }} m²</td>
+              <td>{{ p.cityName }}</td>
+              <td>{{ p.districtName }}</td>
+              <td>
+                <a class="btn-info btn-sm" [routerLink]="['/properties', p.propertyID]">View</a>
+                <ng-container *ngIf="!isAdmin">
+                  <ng-container *ngIf="!p.isReadOnly; else cfElse2">
+                    <a class="btn-secondary btn-sm" [routerLink]="['/properties', p.propertyID, 'edit']">Edit</a>
+                  </ng-container><ng-template #cfElse2>
+                    <span class="badge">Read Only</span>
+                  </ng-template>
+                  <button class="btn-danger btn-sm" (click)="deleteProperty(p.propertyID, p.title)">Delete</button>
+                </ng-container>
+              </td>
+          </tr>
+          <tr *ngIf="pagedProperties.length === 0"><td colspan="9" class="empty">No properties found.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="pagination-bar">
+      <label>Page Size
+        <select [formControl]="pageSizeControl" (change)="changePageSize()">
+          <ng-container *ngFor="let size of pageSizeOptions">
+            <option [value]="size">{{ size }}</option>
+          </ng-container>
+        </select>
+      </label>
+      <button class="btn-secondary btn-sm" (click)="goToPage(currentPage - 1)" [disabled]="currentPage <= 1">Previous</button>
+      <span>Page {{ currentPage }} of {{ totalPages }}</span>
+      <button class="btn-secondary btn-sm" (click)="goToPage(currentPage + 1)" [disabled]="currentPage >= totalPages">Next</button>
+    </div>
+  </ng-container>
+</div>

@@ -1,0 +1,8 @@
+<div class="app-shell">
+  <ng-container *ngIf="showNav">
+    <app-nav></app-nav>
+  </ng-container>
+  <main class="app-main" [class.auth-main]="!showNav">
+    <router-outlet></router-outlet>
+  </main>
+</div>

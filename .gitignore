@@ -1,0 +1,28 @@
+# Dependencies, build products and caches
+**/node_modules/
+**/bin/
+**/obj/
+**/dist/
+**/out-tsc/
+**/.angular/
+**/coverage/
+**/.vs/
+**/.vscode/
+**/.sonarlint/
+**/.idea/
+**/tmp/
+**/.git/
+*.user
+*.suo
+*.log
+*.pfx
+*.p12
+*.pem
+*.key
+.DS_Store
+Thumbs.db
+# Local configuration and credentials; examples are versioned
+.env
+.env.*
+!.env.example
+srs/appsettings*.json

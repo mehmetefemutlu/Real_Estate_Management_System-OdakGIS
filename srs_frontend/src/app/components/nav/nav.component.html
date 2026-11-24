@@ -1,0 +1,85 @@
+<nav class="sidebar">
+  <div class="sidebar-top">
+    <a class="brand" (click)="goHome()" style="cursor:pointer">
+      <span class="brand-mark">TC</span>
+      <span class="brand-copy">
+        <strong>Real Estate System</strong>
+        <small>Operations</small>
+      </span>
+    </a>
+    <button class="burger" (click)="toggleMenu()" aria-label="Toggle navigation">☰</button>
+  </div>
+
+  <div class="sidebar-panel" [class.open]="menuOpen">
+    <div class="sidebar-group">
+      <div class="group-label">What You Can Do</div>
+
+      <ng-container *ngIf="isAdmin">
+        <a routerLink="/dashboard" routerLinkActive="active" (click)="closeMenu()">
+          <span class="nav-icon">◫</span>
+          <span>Dashboard</span>
+        </a>
+      </ng-container>
+
+      <ng-container *ngIf="currentUser || isGuest">
+        <a routerLink="/properties" routerLinkActive="active" (click)="closeMenu()">
+          <span class="nav-icon">⌂</span>
+          <span>Properties</span>
+        </a>
+      </ng-container>
+
+      <ng-container *ngIf="currentUser">
+        <a routerLink="/area-analysis" routerLinkActive="active" (click)="closeMenu()">
+          <span class="nav-icon">△</span>
+          <span>Area Analysis</span>
+        </a>
+        <a routerLink="/profile" routerLinkActive="active" (click)="closeMenu()">
+          <span class="nav-icon">◎</span>
+          <span>Profile</span>
+        </a>
+      </ng-container>
+    </div>
+
+    <ng-container *ngIf="isAdmin">
+      <div class="sidebar-group">
+        <div class="group-label">Administration</div>
+        <a routerLink="/users" routerLinkActive="active" (click)="closeMenu()">
+          <span class="nav-icon">◌</span>
+          <span>Users</span>
+        </a>
+        <a routerLink="/cities" routerLinkActive="active" (click)="closeMenu()">
+          <span class="nav-icon">▣</span>
+          <span>Cities</span>
+        </a>
+        <a routerLink="/districts" routerLinkActive="active" (click)="closeMenu()">
+          <span class="nav-icon">◇</span>
+          <span>Districts</span>
+        </a>
+        <a routerLink="/neighbourhoods" routerLinkActive="active" (click)="closeMenu()">
+          <span class="nav-icon">⋄</span>
+          <span>Neighbourhoods</span>
+        </a>
+        <a routerLink="/logs" routerLinkActive="active" (click)="closeMenu()">
+          <span class="nav-icon">≣</span>
+          <span>Logs</span>
+        </a>
+      </div>
+    </ng-container>
+
+    <div class="sidebar-footer">
+      <ng-container *ngIf="isGuest; else loginLink">
+        <div class="account-card guest-card">
+          <div class="account-avatar">G</div>
+          <div class="account-copy">
+            <strong>Guest Mode</strong>
+            <small>Read-only access</small>
+          </div>
+        </div>
+        <a class="signin-link" routerLink="/login" routerLinkActive="active" (click)="closeMenu()">Sign In</a>
+      </ng-container>
+      <ng-template #loginLink>
+        <a class="signin-link" routerLink="/login" routerLinkActive="active" (click)="closeMenu()">Logout</a>
+      </ng-template>
+    </div>
+  </div>
+</nav>

@@ -1,0 +1,121 @@
+<div class="analysis-page">
+  <header class="analysis-header">
+    <div>
+      <span class="eyebrow">Spatial operations</span>
+      <h1>Area Analysis</h1>
+      <p>Draw or load three numbered polygons, then compute intersection or union results.</p>
+    </div>
+    <div class="header-actions">
+      <div class="status-pill">{{ hasAllInputs() ? 'Ready' : 'Waiting for 3 polygons' }}</div>
+      <button type="button" class="btn-secondary" (click)="clear()">Clear</button>
+    </div>
+  </header>
+
+  <section class="analysis-shell">
+    <div class="map-panel">
+      <div class="map-toolbar">
+        <span>Interactive map</span>
+        <strong>{{ mode === 'manual' ? 'Draw mode' : 'Selection mode' }}</strong>
+      </div>
+      <div #mapTarget class="analysis-map"></div>
+      <ng-container *ngIf="mapError">
+        <div class="map-error">{{ mapError }}</div>
+      </ng-container>
+    </div>
+
+    <aside class="control-panel">
+      <div class="control-section">
+        <h2>Geometry Selection</h2>
+        <div class="segmented">
+          <button type="button" [class.active]="mode === 'manual'" (click)="setMode('manual')">Manual Draw</button>
+          <button type="button" [class.active]="mode === 'auto'" (click)="autoSelect()">Auto-Select</button>
+        </div>
+
+        <ng-container *ngIf="mode === 'manual'; else cfElse1">
+          <div class="field-label">Drawing target</div>
+          <div class="target-buttons">
+            <ng-container *ngFor="let label of drawLabels">
+              <button type="button" [class.active]="activeDrawLabel === label" (click)="selectDrawLabel(label)">
+                {{ label }}
+              </button>
+            </ng-container>
+          </div>
+          <button type="button" class="btn-primary" [disabled]="!hasAllInputs() || loading" (click)="saveManualGeometries()">
+            Save 1, 2, 3
+          </button>
+        </ng-container><ng-template #cfElse1>
+          <ng-container *ngIf="savedPolygons.length > 0">
+            <div class="saved-selectors" [formGroup]="selectedPolygonForm">
+              <ng-container *ngFor="let label of drawLabels">
+                <label>
+                  <span>{{ label }}</span>
+                  <select [formControlName]="label">
+                    <option [value]="null">Select polygon</option>
+                    <ng-container *ngFor="let polygon of savedPolygons">
+                      <option [value]="polygon.id">{{ polygonOptionLabel(polygon) }}</option>
+                    </ng-container>
+                  </select>
+                </label>
+              </ng-container>
+            </div>
+            <button type="button" class="btn-primary" [disabled]="loading" (click)="applySelectedPolygons()">
+              Load Selected
+            </button>
+          </ng-container>
+        </ng-template>
+      </div>
+
+      <div class="control-section">
+        <h2>Operations</h2>
+        <div class="operation-list">
+          <ng-container *ngFor="let operation of operations">
+            <button type="button" [disabled]="loading" (click)="runOperation(operation.key)">
+              {{ operation.label }}
+            </button>
+          </ng-container>
+        </div>
+      </div>
+
+      <div class="control-section">
+        <h2>Geometries</h2>
+        <dl class="geometry-list">
+          <ng-container *ngFor="let label of drawLabels">
+            <div>
+              <dt>{{ label }}</dt>
+              <dd>{{ polygons[label]?.area ? (polygons[label]?.area | number:'1.0-0') + ' m²' : 'Missing' }}</dd>
+            </div>
+          </ng-container>
+        </dl>
+      </div>
+
+      <ng-container *ngIf="result">
+        <div class="result-panel">
+          <h2>{{ result.title }}</h2>
+          <ng-container *ngIf="result.isEmpty; else cfElse2">
+            <p>No intersection found.</p>
+          </ng-container><ng-template #cfElse2>
+            <dl>
+              <div>
+                <dt>Area</dt>
+                <dd>{{ result.area | number:'1.0-0' }} m²</dd>
+              </div>
+              <ng-container *ngIf="result.savedLabel">
+                <div>
+                  <dt>Saved as</dt>
+                  <dd>{{ result.savedLabel }}</dd>
+                </div>
+              </ng-container>
+            </dl>
+          </ng-template>
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="message">
+        <div class="notice success">{{ message }}</div>
+      </ng-container>
+      <ng-container *ngIf="error">
+        <div class="notice error">{{ error }}</div>
+      </ng-container>
+    </aside>
+  </section>
+</div>

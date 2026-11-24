@@ -1,0 +1,82 @@
+<div class="auth-wrapper">
+  <section class="auth-shell">
+    <div class="auth-hero">
+      <div class="hero-copy">
+        <div class="hero-mark">
+          <div class="mark-badge">REMS</div>
+          <div class="mark-line"></div>
+        </div>
+        <h1>Real Estate<br />Management System</h1>
+        <p>Manage properties, users and locations.</p>
+      </div>
+
+      <div class="hero-scene" aria-hidden="true">
+        <div class="scene-tower tower-one"></div>
+        <div class="scene-tower tower-two"></div>
+        <div class="scene-tower tower-three"></div>
+        <div class="scene-tower tower-four"></div>
+        <div class="scene-water"></div>
+        <div class="scene-house">
+          <div class="house-roof"></div>
+          <div class="house-body">
+            <span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-panel">
+        <article>
+          <i>01</i>
+          <strong>Property Operations</strong>
+          <span>Track listings, ownership, and status updates in one place.</span>
+        </article>
+        <article>
+          <i>02</i>
+          <strong>Area Analysis</strong>
+          <span>Analyze property areas, intersections, and unions efficiently.</span>
+        </article>
+        <article>
+          <i>03</i>
+          <strong>Maps and Reporting</strong>
+          <span>Review property geography and export filtered data quickly.</span>
+        </article>
+      </div>
+    </div>
+
+    <form class="auth-form" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <div class="auth-form-inner">
+        <div class="auth-icon" aria-hidden="true">⌂</div>
+        <h2>Welcome Back</h2>
+        <p class="auth-subtitle">Sign in to continue</p>
+
+        <ng-container *ngIf="error">
+          <div class="alert alert-danger">{{ error }}</div>
+        </ng-container>
+
+        <label>Email Address
+          <div class="field-shell">
+            <span class="field-icon" aria-hidden="true">✉</span>
+            <input type="email" formControlName="email" autocomplete="email" placeholder="Enter your email address" />
+          </div>
+        </label>
+
+        <label>Password
+          <div class="field-shell">
+            <span class="field-icon" aria-hidden="true">⟡</span>
+            <input type="password" formControlName="password" autocomplete="current-password" placeholder="Enter your password" />
+          </div>
+        </label>
+
+        <div class="auth-actions">
+          <button type="submit" [disabled]="loading || loginForm.invalid">
+            {{ loading ? 'Signing in...' : 'Sign In' }}
+          </button>
+        </div>
+
+        <div class="auth-divider"><span>or</span></div>
+        <p class="link">Don't have an account? <a routerLink="/register">Register</a></p>
+      </div>
+    </form>
+  </section>
+</div>

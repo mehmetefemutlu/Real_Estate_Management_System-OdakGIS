@@ -1,0 +1,122 @@
+<div class="page">
+  <div class="page-header">
+    <h1>{{ isEditMode ? 'Edit Property' : 'New Property' }}</h1>
+    <a class="btn-secondary" routerLink="/properties">Cancel</a>
+  </div>
+
+  <ng-container *ngIf="error"> <div class="alert alert-danger">{{ error }}</div> </ng-container>
+
+  <form class="property-form" [formGroup]="propertyForm" (ngSubmit)="onSubmit()">
+    <div class="property-workspace">
+      <div class="form-column">
+        <div class="form-section">
+          <h3>Basic Information</h3>
+          <div class="form-grid">
+            <label class="full">Title
+              <input type="text" formControlName="title" />
+            </label>
+            <label class="full">Description
+              <textarea formControlName="description" rows="2"></textarea>
+            </label>
+            <label>Price (₺)
+              <input type="number" formControlName="price" min="0" />
+            </label>
+            <label>Area (m²)
+              <input type="number" formControlName="area" min="1" readonly />
+            </label>
+            <label>Property Type
+              <select formControlName="propertyType">
+                <ng-container *ngFor="let t of propertyTypes">
+                  <option [ngValue]="t.value">{{ t.label }}</option>
+                </ng-container>
+              </select>
+            </label>
+            <label>Owner
+              <input type="text" [value]="'You (ID: ' + model.ownerId + ')'" disabled />
+              <input type="hidden" formControlName="ownerId" />
+            </label>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3>Location</h3>
+          <div class="form-grid">
+            <label class="full">Address
+              <input type="text" formControlName="address" />
+            </label>
+            <label>City
+              <select formControlName="cityId" (change)="onCityChange()">
+                <option [ngValue]="0" disabled>Select city</option>
+                <ng-container *ngFor="let c of cities">
+                  <option [ngValue]="c.id">{{ c.cityName }}</option>
+                </ng-container>
+              </select>
+            </label>
+            <label>District
+              <select formControlName="districtId" (change)="onDistrictChange()" [disabled]="!selectedCityId">
+                <option [ngValue]="0" disabled>Select district</option>
+                <ng-container *ngFor="let d of districts">
+                  <option [ngValue]="d.id">{{ d.districtName }}</option>
+                </ng-container>
+              </select>
+            </label>
+            <label>Neighbourhood
+              <select formControlName="neighbourhoodId" [disabled]="!selectedDistrictId">
+                <option [ngValue]="0" disabled>Select neighbourhood</option>
+                <ng-container *ngFor="let n of neighbourhoods">
+                  <option [ngValue]="n.id">{{ n.name }}</option>
+                </ng-container>
+              </select>
+            </label>
+            <label>Parcel Number
+              <input type="text" formControlName="parcelNumber" />
+            </label>
+            <label>Lot Number
+              <input type="text" formControlName="lotNumber" />
+            </label>
+            <label class="full">Photo
+              <input type="file" name="image" accept=".jpg,.jpeg,.png" (change)="onImageSelected($event)" />
+            </label>
+          </div>
+        </div>
+
+      </div>
+
+      <aside class="map-column">
+        <div class="form-section map-section">
+          <h3>Map</h3>
+          <app-property-map [coordinates]="propertyForm.get('coordinates')?.value" (coordinatesChange)="onCoordinatesChange($event)" (areaChange)="onAreaChange($event)" [editable]="true"></app-property-map>
+          <label class="coordinates-field">Coordinates
+            <textarea formControlName="coordinates" rows="4" readonly></textarea>
+          </label>
+        </div>
+
+        <div class="form-section">
+          <h3>Details</h3>
+          <div class="form-grid details-grid">
+            <label>Bedrooms
+              <input type="number" formControlName="bedrooms" min="0" />
+            </label>
+            <label>Bathrooms
+              <input type="number" formControlName="bathrooms" min="0" />
+            </label>
+            <label>Parking Spaces
+              <input type="number" formControlName="parkingSpaces" min="0" />
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" formControlName="isReadOnly" />
+              Read Only
+            </label>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <div class="form-actions">
+      <button class="btn-primary" type="submit" [disabled]="saving || propertyForm.invalid">
+        {{ saving ? 'Saving...' : (isEditMode ? 'Update' : 'Create') }}
+      </button>
+      <a class="btn-secondary" routerLink="/properties">Cancel</a>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,111 @@
+<div class="page">
+  <div class="page-header">
+    <h1>System Logs</h1>
+    <div class="log-actions">
+      <button class="btn-secondary" (click)="toggleFilter()">
+        {{ showFilter ? 'Hide Filter' : 'Filter' }}
+      </button>
+      <button class="btn-secondary" (click)="exportCsv()">Export Excel</button>
+      <button class="btn-secondary" (click)="exportPdf()">Export PDF</button>
+    </div>
+  </div>
+
+  <ng-container *ngIf="showFilter">
+    <div class="form-card log-filter" [formGroup]="filterForm">
+      <label>User ID
+        <input type="number" formControlName="userId" placeholder="User ID" />
+      </label>
+      <label>Operation Type
+        <select formControlName="operationType">
+          <option [ngValue]="undefined">All</option>
+          <option [ngValue]="1">Create</option>
+          <option [ngValue]="2">Update</option>
+          <option [ngValue]="3">Delete</option>
+          <option [ngValue]="4">Read</option>
+        </select>
+      </label>
+      <label>Status
+        <select formControlName="status">
+          <option [ngValue]="undefined">All</option>
+          <option [ngValue]="1">Active</option>
+          <option [ngValue]="2">Pending</option>
+          <option [ngValue]="3">Completed</option>
+          <option [ngValue]="4">Aborted</option>
+        </select>
+      </label>
+      <label>Description
+        <input type="text" formControlName="description" placeholder="Search description" />
+      </label>
+      <label>User IP
+        <input type="text" formControlName="userIP" placeholder="IP address" />
+      </label>
+      <label>Timestamp From
+        <input type="date" formControlName="startDate" />
+      </label>
+      <label>Timestamp To
+        <input type="date" formControlName="endDate" />
+      </label>
+      <div class="form-actions filter-actions">
+        <button class="btn-primary" (click)="applyFilter()">Apply Filter</button>
+        <button class="btn-secondary" (click)="resetFilter()">Clear Filter</button>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="error"> <div class="alert alert-danger">{{ error }}</div> </ng-container>
+  <ng-container *ngIf="loading"> <div class="loading">Loading...</div> </ng-container>
+
+  <ng-container *ngIf="!loading">
+    <table class="data-table" #logTable>
+      <caption class="visually-hidden">Logs list with user, operation, message, status, IP address, timestamp, and available actions.</caption>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>User</th>
+          <th>Operation</th>
+          <th>Message</th>
+          <th>Description</th>
+          <th>Status</th>
+          <th>User IP</th>
+          <th>Timestamp</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let log of pagedLogs">
+            <td>{{ log.id }}</td>
+            <td>{{ log.name }} (#{{ log.userId }})</td>
+            <td><span class="badge badge-blue">{{ getOperationName(log.operationType) }}</span></td>
+            <td>{{ log.message }}</td>
+            <td>{{ log.description }}</td>
+            <td><span class="badge" [ngClass]="statusBadge(log.status)">{{ getStatusName(log.status) }}</span></td>
+            <td>{{ log.userIP || 'N/A' }}</td>
+            <td>{{ log.timestamp | date:'medium' }}</td>
+            <td>
+              <button class="btn-danger btn-sm" (click)="deleteLog(log.id)">Delete</button>
+            </td>
+        </tr>
+        <tr *ngIf="pagedLogs.length === 0"><td colspan="9" class="empty">{{ filterApplied ? 'No log records match the criteria.' : 'No logs found.' }}</td></tr>
+      </tbody>
+    </table>
+
+    <div class="pagination-bar">
+      <label>Page Size
+        <select [formControl]="pageSizeControl" (change)="changePageSize()">
+          <ng-container *ngFor="let size of pageSizeOptions">
+            <option [value]="size">{{ size }}</option>
+          </ng-container>
+        </select>
+      </label>
+      <button class="btn-secondary btn-sm" (click)="goToPage(currentPage - 1)" [disabled]="currentPage <= 1 || loading">
+        Previous
+      </button>
+      <span>
+        Page {{ currentPage }}<ng-container *ngIf="!filterApplied"> <span> of {{ totalPages }}</span> </ng-container>
+      </span>
+      <button class="btn-secondary btn-sm" (click)="goToPage(currentPage + 1)" [disabled]="!canGoNext || loading">
+        Next
+      </button>
+    </div>
+  </ng-container>
+</div>

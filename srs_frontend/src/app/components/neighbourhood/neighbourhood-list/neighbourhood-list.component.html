@@ -1,0 +1,81 @@
+<div class="page">
+  <div class="page-header">
+    <h1>Neighbourhoods</h1>
+    <button class="btn-primary" (click)="openForm()">+ Add Neighbourhood</button>
+  </div>
+
+  <div class="filter-bar">
+    <label>Filter by District
+      <select [formControl]="filterDistrictControl" (change)="applyDistrictFilter()">
+        <option [value]="0">All Districts</option>
+        <ng-container *ngFor="let d of districts">
+          <option [value]="d.id">{{ d.districtName }} ({{ d.cityName }})</option>
+        </ng-container>
+      </select>
+    </label>
+  </div>
+
+  <ng-container *ngIf="showForm">
+    <div class="form-card" [formGroup]="neighbourhoodForm">
+      <h3>New Neighbourhood</h3>
+      <label>Name
+        <input type="text" formControlName="name" placeholder="Neighbourhood name" />
+      </label>
+      <label>District
+        <select formControlName="districtId">
+          <option [value]="0" disabled>Select a district</option>
+          <ng-container *ngFor="let d of districts">
+            <option [value]="d.id">{{ d.districtName }} ({{ d.cityName }})</option>
+          </ng-container>
+        </select>
+      </label>
+      <div class="form-actions">
+        <button class="btn-primary" (click)="save()" [disabled]="saving || neighbourhoodForm.invalid">Save</button>
+        <button class="btn-secondary" (click)="cancelForm()">Cancel</button>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="error"> <div class="alert alert-danger">{{ error }}</div> </ng-container>
+  <ng-container *ngIf="loading"> <div class="loading">Loading...</div> </ng-container>
+
+  <ng-container *ngIf="!loading">
+    <table class="data-table">
+      <caption class="visually-hidden">Neighbourhoods list with IDs, district and city details, and available actions.</caption>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>District</th>
+          <th>City</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let n of pagedNeighbourhoods">
+            <td>{{ n.id }}</td>
+            <td>{{ n.name }}</td>
+            <td>{{ n.districtName }}</td>
+            <td>{{ n.cityName }}</td>
+            <td>
+              <button class="btn-danger btn-sm" (click)="delete(n.id, n.name)">Delete</button>
+            </td>
+        </tr>
+        <tr *ngIf="pagedNeighbourhoods.length === 0"><td colspan="5" class="empty">No neighbourhoods found.</td></tr>
+      </tbody>
+    </table>
+
+    <div class="pagination-bar">
+      <label>Page Size
+        <select [formControl]="pageSizeControl" (change)="changePageSize()">
+          <ng-container *ngFor="let size of pageSizeOptions">
+            <option [value]="size">{{ size }}</option>
+          </ng-container>
+        </select>
+      </label>
+      <button class="btn-secondary btn-sm" (click)="goToPage(currentPage - 1)" [disabled]="currentPage <= 1">Previous</button>
+      <span>Page {{ currentPage }} of {{ totalPages }}</span>
+      <button class="btn-secondary btn-sm" (click)="goToPage(currentPage + 1)" [disabled]="currentPage >= totalPages">Next</button>
+    </div>
+  </ng-container>
+</div>

@@ -1,0 +1,11 @@
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Host=localhost;Port=5432;Database=RealEstateDb;Username=postgres;Password=CHANGE_ME_DATABASE_PASSWORD"
+  },
+  "Jwt": {
+    "Key": "REPLACE_WITH_RANDOM_SECRET_AT_LEAST_32_BYTES",
+    "Issuer": "SRSApi",
+    "Audience": "SRSClient",
+    "ExpirationHours": 24
+  }
+}

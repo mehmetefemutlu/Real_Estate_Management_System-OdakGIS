@@ -1,0 +1,24 @@
+<div class="map-shell">
+  <div #mapTarget class="map-target"></div>
+  <ng-container *ngIf="!editable && hasCoordinates">
+    <div class="layer-panel">
+      <label class="layer-toggle">
+        <input type="checkbox" [checked]="showAdministrativeBoundaries" (change)="onBoundaryToggle($event)" />
+        <span class="legend-swatch boundaries"></span>
+        <span>{{ boundaryLabel }}</span>
+      </label>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="mapError">
+    <div class="map-error">{{ mapError }}</div>
+  </ng-container>
+  <ng-container *ngIf="editable">
+    <div class="map-toolbar">
+      <span>{{ isPolygonComplete ? 'Polygon selected' : selectedPoints + ' / 4 points selected' }}</span>
+      <button type="button" class="map-reset" (click)="resetSelection()">Reset</button>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="!hasCoordinates">
+    <div class="map-empty">{{ editable ? 'Select 4 points on the map.' : 'No map location selected.' }}</div>
+  </ng-container>
+</div>

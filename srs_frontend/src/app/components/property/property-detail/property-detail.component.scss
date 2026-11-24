@@ -1,0 +1,42 @@
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.25rem;
+}
+
+.detail-card {
+  padding: 1.35rem;
+}
+
+.detail-card h3 {
+  margin: 0 0 0.75rem;
+  color: var(--navy);
+  font-size: 1rem;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 0.65rem;
+}
+
+.map-card {
+  grid-column: 1 / -1;
+}
+
+.image-card {
+  grid-column: 1 / -1;
+}
+
+.image-card img {
+  display: block;
+  width: 100%;
+  max-height: 420px;
+  object-fit: contain;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #f8fafc;
+}
+
+dl { display: grid; grid-template-columns: 1fr 1fr; gap: 0.55rem 0.75rem; margin: 0; }
+dt { font-weight: 750; font-size: 0.8rem; color: var(--muted); }
+dd { font-size: 0.9rem; color: var(--ink); margin: 0; }
+
+a.btn-secondary { text-decoration: none; display: inline-block; }

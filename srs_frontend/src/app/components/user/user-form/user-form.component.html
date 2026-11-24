@@ -1,0 +1,78 @@
+<div class="page">
+  <div class="page-header">
+    <h1>{{ isEditMode ? 'Edit User' : 'New User' }}</h1>
+    <a class="btn-secondary" routerLink="/users">Cancel</a>
+  </div>
+
+  <ng-container *ngIf="error"> <div class="alert alert-danger">{{ error }}</div> </ng-container>
+
+  <div class="form-notice">
+    <strong>{{ isEditMode ? 'Update User Requirements' : 'Add User Requirements' }}</strong>
+    <span>All fields are required{{ isEditMode ? ', except password when it should stay unchanged' : '' }}.</span>
+    <span>Password must be 8-12 characters and include at least one letter, one number, and one special character.</span>
+  </div>
+
+  <form class="form-card" style="max-width:560px;" [formGroup]="userForm" (ngSubmit)="onSubmit()">
+    <ng-container *ngIf="!isEditMode; else editUserForm">
+      <label>First Name
+        <input type="text" formControlName="firstName" />
+      </label>
+      <label>Last Name
+        <input type="text" formControlName="lastName" />
+      </label>
+      <label>Email
+        <input type="email" formControlName="email" />
+      </label>
+      <label>Password
+        <input
+          type="password"
+          formControlName="password"
+          minlength="8"
+          maxlength="12"
+          pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,12}$" />
+        <small>{{ passwordHint }}</small>
+      </label>
+      <label>Role
+        <select formControlName="userRole">
+          <ng-container *ngFor="let r of roles">
+            <option [value]="r.value">{{ r.label }}</option>
+          </ng-container>
+        </select>
+      </label>
+    </ng-container>
+    <ng-template #editUserForm>
+      <label>First Name
+        <input type="text" formControlName="firstName" />
+      </label>
+      <label>Last Name
+        <input type="text" formControlName="lastName" />
+      </label>
+      <label>Email
+        <input type="email" formControlName="email" />
+      </label>
+      <label>Password
+        <input
+          type="password"
+          formControlName="password"
+          minlength="8"
+          maxlength="12"
+          pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,12}$" />
+        <small>Leave blank to keep the current password. {{ passwordHint }}</small>
+      </label>
+      <label>Role
+        <select formControlName="userRole">
+          <ng-container *ngFor="let r of roles">
+            <option [value]="r.value">{{ r.label }}</option>
+          </ng-container>
+        </select>
+      </label>
+    </ng-template>
+
+    <div class="form-actions" style="margin-top:1rem;">
+      <button class="btn-primary" type="submit" [disabled]="saving || userForm.invalid">
+        {{ saving ? 'Saving...' : (isEditMode ? 'Update' : 'Create') }}
+      </button>
+      <a class="btn-secondary" routerLink="/users">Cancel</a>
+    </div>
+  </form>
+</div>

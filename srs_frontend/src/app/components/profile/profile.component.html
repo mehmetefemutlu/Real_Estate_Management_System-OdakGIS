@@ -1,0 +1,110 @@
+<div class="page">
+  <div class="page-header">
+    <h1>Profile Management</h1>
+  </div>
+
+  <ng-container *ngIf="error"> <div class="alert alert-danger">{{ error }}</div> </ng-container>
+  <ng-container *ngIf="loading"> <div class="loading">Loading profile...</div> </ng-container>
+
+  <ng-container *ngIf="!loading && currentUser">
+    <section class="profile-grid">
+      <div class="profile-column">
+        <div class="profile-card profile-summary">
+          <div class="summary-badge">{{ currentUser.firstName.charAt(0) }}{{ currentUser.lastName.charAt(0) }}</div>
+          <h2>{{ currentUser.firstName }} {{ currentUser.lastName }}</h2>
+          <p>{{ currentUser.email }}</p>
+          <dl>
+            <dt>Role</dt>
+            <dd>{{ UserRole[currentUser.userRole] }}</dd>
+            <dt>Created</dt>
+            <dd>{{ currentUser.createdAt | date:'mediumDate' }}</dd>
+            <dt>Updated</dt>
+            <dd>{{ currentUser.updatedAt | date:'mediumDate' }}</dd>
+          </dl>
+        </div>
+
+        <form class="profile-card profile-form" [formGroup]="passwordForm" (ngSubmit)="changePassword()">
+          <div class="card-head">
+            <h3>Security</h3>
+            <ng-container *ngIf="passwordMessage"> <span class="status-pill success">{{ passwordMessage }}</span> </ng-container>
+          </div>
+
+          <p class="helper-copy">{{ passwordHint }}</p>
+
+          <div class="profile-fields single-column">
+            <label>Current Password
+              <input type="password" formControlName="currentPassword" autocomplete="current-password" />
+            </label>
+            <label>New Password
+              <input type="password" formControlName="newPassword" autocomplete="new-password" />
+            </label>
+          </div>
+
+          <div class="form-actions">
+            <button class="btn-primary" type="submit" [disabled]="changingPassword || passwordForm.invalid">
+              {{ changingPassword ? 'Updating...' : 'Change Password' }}
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <div class="profile-column">
+        <form class="profile-card profile-form" [formGroup]="profileForm" (ngSubmit)="saveProfile()">
+          <div class="card-head">
+            <h3>Account Details</h3>
+            <ng-container *ngIf="profileMessage"> <span class="status-pill success">{{ profileMessage }}</span> </ng-container>
+          </div>
+
+          <div class="profile-fields">
+            <label>First Name
+              <input type="text" formControlName="firstName" />
+            </label>
+            <label>Last Name
+              <input type="text" formControlName="lastName" />
+            </label>
+            <label class="full">Email Address
+              <input type="email" formControlName="email" autocomplete="email" />
+            </label>
+          </div>
+
+          <div class="form-actions">
+            <button class="btn-primary" type="submit" [disabled]="savingProfile || profileForm.invalid">
+              {{ savingProfile ? 'Saving...' : 'Save Profile' }}
+            </button>
+          </div>
+        </form>
+
+        <section class="profile-card profile-form">
+          <div class="card-head">
+            <h3>Theme</h3>
+            <ng-container *ngIf="themeMessage"> <span class="status-pill success">{{ themeMessage }}</span> </ng-container>
+          </div>
+
+          <div class="profile-fields single-column">
+            <label>Application Theme
+              <select [formControl]="themeControl" (change)="changeTheme(themeControl.value)">
+                <ng-container *ngFor="let theme of themeOptions">
+                  <option [value]="theme">{{ getThemeLabel(theme) }}</option>
+                </ng-container>
+              </select>
+            </label>
+          </div>
+        </section>
+
+        <section class="profile-card profile-form danger-zone">
+          <div class="card-head">
+            <h3>Delete Account</h3>
+          </div>
+
+          <p class="helper-copy">Permanently remove your account and associated records from the system.</p>
+
+          <div class="form-actions">
+            <button class="btn-delete-account" type="button" [disabled]="deletingAccount" (click)="deleteAccount()">
+              {{ deletingAccount ? 'Deleting...' : 'Delete Account' }}
+            </button>
+          </div>
+        </section>
+      </div>
+    </section>
+  </ng-container>
+</div>

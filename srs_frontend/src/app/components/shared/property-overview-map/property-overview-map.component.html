@@ -1,0 +1,49 @@
+<div class="overview-map-shell">
+  <div #mapTarget class="overview-map-target"></div>
+
+  <div class="map-controls" [formGroup]="mapControlForm">
+    <label>Base
+      <select formControlName="baseLayer" (change)="onBaseLayerChange()">
+        <option value="osm">OpenStreetMap</option>
+        <option value="google">Google Maps</option>
+      </select>
+    </label>
+
+    <label class="check-row">
+      <input type="checkbox" formControlName="showAdministrativeBoundaries" (change)="onBoundaryToggle()" />
+      Administrative Boundaries
+    </label>
+
+    <label>Layer Opacity
+      <input type="range" min="10" max="100" step="5" formControlName="overlayOpacity" (input)="onOverlayOpacityChange()" />
+    </label>
+  </div>
+
+  <ng-container *ngIf="selectedProperty">
+    <div class="property-popup">
+      <div class="popup-header">
+        <strong>{{ selectedProperty.title }}</strong>
+        <button type="button" class="popup-close" aria-label="Close property popup" (click)="closePopup()">x</button>
+      </div>
+      <div class="popup-price">{{ selectedProperty.price | number:'1.0-0' }} ₺</div>
+      <dl>
+        <dt>Type</dt><dd>{{ getTypeName(selectedProperty.propertyType) }}</dd>
+        <dt>Area</dt><dd>{{ selectedProperty.area }} m²</dd>
+        <dt>City</dt><dd>{{ selectedProperty.cityName }}</dd>
+        <dt>District</dt><dd>{{ selectedProperty.districtName }}</dd>
+        <dt>Parcel</dt><dd>{{ selectedProperty.parcelNumber || '-' }}</dd>
+        <dt>Lot</dt><dd>{{ selectedProperty.lotNumber || '-' }}</dd>
+      </dl>
+      <small>{{ selectedProperty.address }}</small>
+      <button type="button" class="popup-action" (click)="openSelectedProperty()">View Details</button>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="mapError">
+    <div class="map-error">{{ mapError }}</div>
+  </ng-container>
+
+  <ng-container *ngIf="!mapError && properties.length === 0">
+    <div class="map-empty">No properties to display.</div>
+  </ng-container>
+</div>

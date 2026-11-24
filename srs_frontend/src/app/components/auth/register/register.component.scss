@@ -1,0 +1,7 @@
+@use '../login/login.component' as *;
+
+.alert.success {
+  background: #ecfdf3;
+  color: #067647;
+  border: 1px solid #b7efc5;
+}

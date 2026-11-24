@@ -1,0 +1,28 @@
+<div class="dashboard">
+  <h1>Real Estate System</h1>
+  <p class="subtitle">Manage properties, locations, and users from one place.</p>
+  <div class="cards">
+    <ng-container *ngFor="let card of cards">
+      <a class="card" [routerLink]="card.route">
+        <span class="icon">{{ card.icon }}</span>
+        <h2>{{ card.title }}</h2>
+        <p>{{ card.description }}</p>
+      </a>
+    </ng-container>
+  </div>
+
+  <section class="dashboard-map">
+    <div class="section-header">
+      <h2>Property Map</h2>
+      <ng-container *ngIf="mapLoading">
+        <span>Loading map data...</span>
+      </ng-container>
+    </div>
+    <ng-container *ngIf="mapError">
+      <div class="map-alert">{{ mapError }}</div>
+    </ng-container>
+    <ng-container *ngIf="!mapLoading">
+      <app-property-overview-map [properties]="properties"></app-property-overview-map>
+    </ng-container>
+  </section>
+</div>

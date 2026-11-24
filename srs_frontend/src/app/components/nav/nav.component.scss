@@ -1,0 +1,228 @@
+.sidebar {
+  position: fixed;
+  inset: 0 auto 0 0;
+  width: 276px;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  padding: 1rem;
+  background: var(--sidebar-bg);
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 18px 0 40px rgba(14, 24, 59, 0.14);
+  z-index: 60;
+}
+
+.sidebar-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+  margin-bottom: 1rem;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  color: #fff;
+  text-decoration: none;
+}
+
+.brand-mark {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  background: linear-gradient(180deg, #2d4778, #223766);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.brand-copy {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.brand-copy strong {
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+}
+
+.brand-copy small {
+  color: #e2ecf8;
+  font-size: 0.75rem;
+  font-weight: 650;
+}
+
+.sidebar-panel {
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  padding: 1rem;
+  border-radius: 24px;
+  background: linear-gradient(180deg, #1a2d62, #142755);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(12px);
+}
+
+.sidebar-group {
+  display: grid;
+  gap: 0.32rem;
+}
+
+.group-label {
+  margin-bottom: 0.3rem;
+  color: #dbe8f6;
+  font-size: 0.73rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.sidebar-panel a {
+  display: grid;
+  grid-template-columns: 18px minmax(0, 1fr);
+  align-items: center;
+  gap: 0.72rem;
+  min-height: 44px;
+  padding: 0.72rem 0.9rem;
+  border-radius: 14px;
+  color: #edf5ff;
+  text-decoration: none;
+  font-size: 0.92rem;
+  font-weight: 700;
+  transition: transform 0.16s ease, background 0.16s ease, color 0.16s ease, box-shadow 0.16s ease;
+}
+
+.sidebar-panel a:hover,
+.sidebar-panel a.active {
+  background: linear-gradient(90deg, #2a5280, #1e416d);
+  color: #fff;
+  transform: translateX(2px);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.nav-icon {
+  color: #c7e8fb;
+  font-size: 0.95rem;
+  text-align: center;
+}
+
+.sidebar-footer {
+  margin-top: auto;
+  display: grid;
+  gap: 0.8rem;
+}
+
+.account-card {
+  display: grid;
+  grid-template-columns: 46px minmax(0, 1fr);
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.9rem;
+  border-radius: 18px;
+  background: #1e3a5f;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.account-avatar {
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  background: linear-gradient(180deg, #d8f1ff, #8cc9ec);
+  color: #103356;
+  font-size: 0.92rem;
+  font-weight: 900;
+}
+
+.account-copy {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.account-copy strong {
+  color: #fff;
+  font-size: 0.9rem;
+}
+
+.account-copy small {
+  color: #e2ecf8;
+  font-size: 0.76rem;
+  font-weight: 650;
+}
+
+.btn-logout,
+.signin-link {
+  width: 100%;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  font-size: 0.9rem;
+  font-weight: 760;
+}
+
+.btn-logout {
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: #25466d;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.18s ease, transform 0.18s ease;
+}
+
+.btn-logout:hover {
+  background: #2d557f;
+  transform: translateY(-1px);
+}
+
+.signin-link {
+  background: linear-gradient(90deg, #1f4f78, #183d65);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.guest-card .account-avatar {
+  background: linear-gradient(180deg, #f5faff, #d3e3ef);
+}
+
+.burger {
+  display: none;
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 12px;
+  background: #1e3a5f;
+  color: #fff;
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+
+@media (max-width: 920px) {
+  .sidebar {
+    position: sticky;
+    inset: 0;
+    width: 100%;
+    padding: 0.75rem;
+    box-shadow: 0 12px 28px rgba(14, 24, 59, 0.14);
+  }
+
+  .burger {
+    display: inline-grid;
+    place-items: center;
+  }
+
+  .sidebar-panel {
+    display: none;
+    margin-top: 0.35rem;
+  }
+
+  .sidebar-panel.open {
+    display: flex;
+  }
+}

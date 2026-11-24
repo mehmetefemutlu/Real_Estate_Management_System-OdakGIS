@@ -1,0 +1,80 @@
+.app-shell {
+  min-height: 100vh;
+  background: var(--app-shell-bg);
+}
+
+.app-main {
+  position: relative;
+  overflow: hidden;
+  min-height: 100vh;
+  margin-left: 276px;
+  padding: 1px 0 3rem;
+  background: var(--app-main-bg);
+}
+
+.app-main::before,
+.app-main::after {
+  content: '';
+  position: absolute;
+  inset: auto;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.app-main::before {
+  top: 64px;
+  right: -120px;
+  width: 420px;
+  height: 420px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 30% 30%, rgba(143, 214, 247, 0.34), rgba(143, 214, 247, 0.04) 56%, transparent 72%);
+  filter: blur(8px);
+}
+
+.app-main::after {
+  left: 48px;
+  bottom: 42px;
+  width: 340px;
+  height: 340px;
+  border-radius: 38% 62% 58% 42% / 44% 42% 58% 56%;
+  background:
+    linear-gradient(180deg, rgba(9, 111, 146, 0.1), rgba(43, 119, 188, 0.04));
+  filter: blur(4px);
+}
+
+.app-main > * {
+  position: relative;
+  z-index: 1;
+}
+
+.app-main.auth-main {
+  margin-left: 0;
+  padding: 0;
+  background: none;
+}
+
+.app-main.auth-main::before,
+.app-main.auth-main::after {
+  display: none;
+}
+
+@media (max-width: 920px) {
+  .app-main {
+    margin-left: 0;
+    min-height: calc(100vh - 84px);
+  }
+
+  .app-main::before {
+    right: -180px;
+    width: 320px;
+    height: 320px;
+  }
+
+  .app-main::after {
+    left: -40px;
+    bottom: 0;
+    width: 240px;
+    height: 240px;
+  }
+}

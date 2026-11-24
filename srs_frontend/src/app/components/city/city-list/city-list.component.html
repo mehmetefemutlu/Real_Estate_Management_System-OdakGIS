@@ -1,0 +1,58 @@
+<div class="page">
+  <div class="page-header">
+    <h1>Cities</h1>
+    <button class="btn-primary" (click)="openForm()">+ Add City</button>
+  </div>
+
+  <ng-container *ngIf="showForm">
+    <div class="form-card" [formGroup]="cityForm">
+      <h3>New City</h3>
+      <label>City Name
+        <input type="text" formControlName="cityName" placeholder="Enter city name" />
+      </label>
+      <div class="form-actions">
+        <button class="btn-primary" (click)="saveCity()" [disabled]="saving || cityForm.invalid">Save</button>
+        <button class="btn-secondary" (click)="cancelForm()">Cancel</button>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="error"> <div class="alert alert-danger">{{ error }}</div> </ng-container>
+  <ng-container *ngIf="loading"> <div class="loading">Loading...</div> </ng-container>
+
+  <ng-container *ngIf="!loading">
+    <table class="data-table">
+      <caption class="visually-hidden">Cities list with IDs, names, and available actions.</caption>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>City Name</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let city of pagedCities">
+            <td>{{ city.id }}</td>
+            <td>{{ city.cityName }}</td>
+            <td>
+              <button class="btn-danger btn-sm" (click)="deleteCity(city.id, city.cityName)">Delete</button>
+            </td>
+        </tr>
+        <tr *ngIf="pagedCities.length === 0"><td colspan="3" class="empty">No cities found.</td></tr>
+      </tbody>
+    </table>
+
+    <div class="pagination-bar">
+      <label>Page Size
+        <select [formControl]="pageSizeControl" (change)="changePageSize()">
+          <ng-container *ngFor="let size of pageSizeOptions">
+            <option [value]="size">{{ size }}</option>
+          </ng-container>
+        </select>
+      </label>
+      <button class="btn-secondary btn-sm" (click)="goToPage(currentPage - 1)" [disabled]="currentPage <= 1">Previous</button>
+      <span>Page {{ currentPage }} of {{ totalPages }}</span>
+      <button class="btn-secondary btn-sm" (click)="goToPage(currentPage + 1)" [disabled]="currentPage >= totalPages">Next</button>
+    </div>
+  </ng-container>
+</div>

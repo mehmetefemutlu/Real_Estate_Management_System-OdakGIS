@@ -1,0 +1,116 @@
+.map-shell {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #eef3f8;
+  box-shadow: var(--shadow-sm);
+}
+
+.map-target {
+  width: 100%;
+  height: 320px;
+}
+
+.map-empty {
+  position: absolute;
+  left: 1rem;
+  bottom: 1rem;
+  padding: 0.42rem 0.7rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 700;
+  box-shadow: var(--shadow-sm);
+}
+
+.map-toolbar {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.94);
+  color: var(--ink);
+  font-size: 0.82rem;
+  font-weight: 750;
+  box-shadow: var(--shadow-sm);
+}
+
+.layer-panel {
+  position: absolute;
+  top: 0.85rem;
+  left: 0.85rem;
+  z-index: 2;
+  display: grid;
+  gap: 0.45rem;
+  width: min(360px, calc(100% - 1.7rem));
+  padding: 0.65rem;
+  border: 1px solid rgba(196, 211, 226, 0.86);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.95);
+  color: var(--ink);
+  box-shadow: var(--shadow-sm);
+}
+
+.layer-toggle {
+  display: grid;
+  grid-template-columns: auto auto minmax(0, 1fr);
+  align-items: center;
+  gap: 0.45rem;
+  margin: 0;
+  color: var(--ink);
+  font-size: 0.78rem;
+  font-weight: 750;
+  line-height: 1.25;
+}
+
+.layer-toggle input {
+  width: auto;
+  margin: 0;
+}
+
+.legend-swatch {
+  width: 18px;
+  height: 12px;
+  border-radius: 3px;
+}
+
+.legend-swatch.boundaries {
+  border: 2px dashed #12945b;
+  background: rgba(18, 148, 91, 0.08);
+}
+
+.map-reset {
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #eef2f7;
+  color: var(--ink);
+  padding: 0.35rem 0.55rem;
+  cursor: pointer;
+  font-weight: 750;
+}
+
+.map-error {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: rgba(255, 241, 242, 0.9);
+  color: #9f1239;
+  font-weight: 750;
+}
+
+@media (max-width: 560px) {
+  .layer-panel {
+    top: 0.65rem;
+    left: 0.65rem;
+    width: calc(100% - 1.3rem);
+  }
+}
